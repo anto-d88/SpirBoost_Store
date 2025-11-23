@@ -1,76 +1,25 @@
-import os
 from pathlib import Path
-import environ
-
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
-
 import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
+import dj_database_url
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
+# =========================
+#  CHEMINS DE BASE
+# =========================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env = environ.Env(
-    DJANGO_DEBUG=(bool, True),
-    DJANGO_ENV=(str, "dev"),
-)
+# =========================
+#  CONFIG GÉNÉRALE
+# =========================
 
-env_file = BASE_DIR / ".env"
-if env_file.exists():
-    environ.Env.read_env(env_file)
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret-key-change-me")
+DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
-
-import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
-
-SECRET_KEY = env("DJANGO_SECRET_KEY", default="dev-secret-key-change-me")
-DEBUG = env("DJANGO_DEBUG")
-DJANGO_ENV = env("DJANGO_ENV")
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
-
-import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
+# =========================
+#  APPLICATIONS
+# =========================
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -80,27 +29,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # App e-commerce
     "store",
 ]
 
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
-
-import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
+# =========================
+#  MIDDLEWARE
+# =========================
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -132,35 +66,19 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "spirboost_store.wsgi.application"
-ASGI_APPLICATION = "spirboost_store.asgi.application"
 
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
+# =========================
+#  BASE DE DONNÉES
+# =========================
 
-import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
-
-DATABASE_URL = env("DATABASE_URL", default="")
+DATABASE_URL = os.getenv("DATABASE_URL", "")
 
 if DATABASE_URL:
-    import dj_database_url
     DATABASES = {
         "default": dj_database_url.parse(
             DATABASE_URL,
             conn_max_age=600,
-            ssl_require=False
+            ssl_require=False,
         )
     }
 else:
@@ -171,23 +89,9 @@ else:
         }
     }
 
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
-
-import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
+# =========================
+#  AUTH
+# =========================
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -196,121 +100,41 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
-
-import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
+# =========================
+#  INTERNATIONALISATION
+# =========================
 
 LANGUAGE_CODE = "fr-fr"
 TIME_ZONE = "Europe/Paris"
 USE_I18N = True
 USE_TZ = True
 
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
-
-import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
+# =========================
+#  FICHIERS STATIQUES
+# =========================
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
-
-import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
-
-if DJANGO_ENV == "prod":
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
-
-import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
-
-SUPABASE_URL = env("SUPABASE_URL", default="")
-SUPABASE_ANON_KEY = env("SUPABASE_ANON_KEY", default="")
-SUPABASE_SERVICE_ROLE_KEY = env("SUPABASE_SERVICE_ROLE_KEY", default="")
-
-# ==============================
-#  FICHIERS STATIQUES (LOCAL + PROD)
-# ==============================
-STATIC_URL="/static/"
-
-import os
-if os.environ.get("DJANGO_ENV") == "production":
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-    STATICFILES_DIRS = []
-else:
-    STATICFILES_DIRS = [ BASE_DIR / "static" ]
-    STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# ==============================
-#  FIN STATIC
-# ==============================
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# Cookies non sécurisés (HTTP) pour Railway free sans HTTPS
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
+
+# =========================
+#  SUPABASE (clé dans env)
+# =========================
+
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "")
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+
+# =========================
+#  DIVERS
+# =========================
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
