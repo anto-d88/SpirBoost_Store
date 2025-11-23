@@ -5,7 +5,7 @@ import dj_database_url
 # =========================
 #  CHEMINS DE BASE
 # =========================
-
+# =========================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # =========================
