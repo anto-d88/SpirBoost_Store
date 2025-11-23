@@ -24,7 +24,7 @@ if env_file.exists():
 SECRET_KEY = env("DJANGO_SECRET_KEY", default="dev-secret-key-change-me")
 DEBUG = env("DJANGO_DEBUG")
 DJANGO_ENV = env("DJANGO_ENV")
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
 # ====================================================
 # APPLICATIONS
@@ -140,9 +140,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 if DJANGO_ENV == "prod":
     SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 
 # ====================================================
 # SUPABASE (API)
@@ -157,3 +158,5 @@ SUPABASE_SERVICE_ROLE_KEY = env("SUPABASE_SERVICE_ROLE_KEY", default="")
 # ====================================================
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
