@@ -15,7 +15,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret-key-change-me")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
+ALLOWED_HOSTS = ["*", "spirbooststore-production.up.railway.app", "127.0.0.1", "localhost"]
+
 
 # =========================
 #  APPLICATIONS
@@ -122,8 +123,16 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Cookies non sécurisés (HTTP) pour Railway free sans HTTPS
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SAMESITE = "None"
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.railway.app",
+    "https://spirbooststore-production.up.railway.app",
+]
 
 # =========================
 #  SUPABASE (clé dans env)
