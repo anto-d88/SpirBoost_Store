@@ -15,12 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret-key-change-me")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = [
-    ".railway.app",
-    "localhost",
-    "127.0.0.1"
-]
-
+ALLOWED_HOSTS = ["*", "spirbooststore-production.up.railway.app", "127.0.0.1", "localhost"]
 
 
 # =========================
@@ -136,8 +131,8 @@ CSRF_COOKIE_SAMESITE = "None"
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.railway.app",
+    "https://spirbooststore-production.up.railway.app",
 ]
-
 
 # =========================
 #  SUPABASE (clé dans env)
