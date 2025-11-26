@@ -7,24 +7,11 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ------------------------------------------------
-# Ì¥ê SECRET KEY
-# ------------------------------------------------
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-secret-key")
-
-# ------------------------------------------------
-# Ì¥ß DEBUG MODE
-# ------------------------------------------------
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-# ------------------------------------------------
-# Ìºç ALLOWED HOSTS (Railway)
-# ------------------------------------------------
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
 
-# ------------------------------------------------
-# Ì≥¶ INSTALLED APPS
-# ------------------------------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -35,9 +22,6 @@ INSTALLED_APPS = [
     "store",
 ]
 
-# ------------------------------------------------
-# Ì∑± MIDDLEWARE
-# ------------------------------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -51,9 +35,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "spirboost_store.urls"
 
-# ------------------------------------------------
-# Ìæ® TEMPLATES
-# ------------------------------------------------
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -72,9 +53,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "spirboost_store.wsgi.application"
 
-# ------------------------------------------------
-# Ì¥ê PASSWORD VALIDATORS
-# ------------------------------------------------
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -82,41 +61,32 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ------------------------------------------------
-# Ìºê LANGUAGE / TIME
-# ------------------------------------------------
 LANGUAGE_CODE = "fr-fr"
 TIME_ZONE = "Europe/Paris"
 USE_I18N = True
 USE_TZ = True
 
-# ------------------------------------------------
-# Ì≥Å STATIC FILES (Railway + WhiteNoise)
-# ------------------------------------------------
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# ------------------------------------------------
-# Ì≥Å MEDIA FILES
-# ------------------------------------------------
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# ------------------------------------------------
-# Ìª° CSRF (Railway)
-# ------------------------------------------------
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.up.railway.app",
+    "https://spirbooststore-production.up.railway.app",
 ]
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-# ------------------------------------------------
-# Ì∑Ñ DATABASE (LOCAL + PROD)
-# ------------------------------------------------
+# -------------------------
+# DATABASE CONFIG (LOCAL + PROD)
+# -------------------------
+import dj_database_url
+import os
+
 ENV = os.environ.get("DJANGO_ENV", "development")
 
 if ENV == "production":
@@ -134,5 +104,3 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
