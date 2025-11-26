@@ -1,16 +1,31 @@
-import os
 from pathlib import Path
-from dotenv import load_dotenv
+import os
 import dj_database_url
 
-load_dotenv()
-
+# =========================
+#  CHEMINS DE BASE
+# =========================
+# =========================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-secret-key")
-DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
+# =========================
+#  CONFIG GÉNÉRALE
+# =========================
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret-key-change-me")
+DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
+
+ALLOWED_HOSTS = [
+    ".railway.app",
+    "localhost",
+    "127.0.0.1"
+]
+
+
+
+# =========================
+#  APPLICATIONS
+# =========================
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -19,8 +34,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "store",
 ]
+
+# =========================
+#  MIDDLEWARE
+# =========================
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -53,13 +73,31 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "spirboost_store.wsgi.application"
 
-DATABASES = {
-    "default": dj_database_url.parse(
-        os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+# =========================
+#  BASE DE DONNÉES
+# =========================
+
+DATABASE_URL = os.getenv("DATABASE_URL", "")
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=False,
+        )
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+
+# =========================
+#  AUTH
+# =========================
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -68,22 +106,49 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# =========================
+#  INTERNATIONALISATION
+# =========================
+
 LANGUAGE_CODE = "fr-fr"
 TIME_ZONE = "Europe/Paris"
 USE_I18N = True
 USE_TZ = True
 
+# =========================
+#  FICHIERS STATIQUES
+# =========================
+
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://spirbooststore-production.up.railway.app",
-]
-
+# Cookies non sécurisés (HTTP) pour Railway free sans HTTPS
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SAMESITE = "None"
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.railway.app",
+]
+
+
+# =========================
+#  SUPABASE (clé dans env)
+# =========================
+
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "")
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+
+# =========================
+#  DIVERS
+# =========================
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
