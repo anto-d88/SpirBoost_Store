@@ -53,6 +53,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "spirboost_store.wsgi.application"
 
+DATABASES = {
+    "default": dj_database_url.parse(
+        os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
+    )
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -80,27 +87,3 @@ CSRF_TRUSTED_ORIGINS = [
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-
-# -------------------------
-# DATABASE CONFIG (LOCAL + PROD)
-# -------------------------
-import dj_database_url
-import os
-
-ENV = os.environ.get("DJANGO_ENV", "development")
-
-if ENV == "production":
-    DATABASES = {
-        "default": dj_database_url.parse(
-            os.environ.get("DATABASE_URL"),
-            conn_max_age=600,
-            ssl_require=True
-        )
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
