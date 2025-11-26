@@ -9,6 +9,7 @@ dj-database-url==3.0.1
 Django==5.2.8
 environs==14.5.0
 gotrue==2.12.4
+gunicorn==23.0.0
 h11==0.16.0
 h2==4.3.0
 hpack==4.1.0
